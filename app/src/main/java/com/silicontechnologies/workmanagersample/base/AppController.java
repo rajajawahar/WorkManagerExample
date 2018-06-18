@@ -1,4 +1,4 @@
-package com.silicontechnologies.workmanagersample;
+package com.silicontechnologies.workmanagersample.base;
 
 import android.app.Application;
 import androidx.work.WorkManager;
