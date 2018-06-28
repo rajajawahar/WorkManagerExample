@@ -1,4 +1,4 @@
-package com.silicontechnologies.workmanagersample.base;
+package com.silicontechnologies.workmanagersample.app;
 
 import android.app.Application;
 import androidx.work.WorkManager;
@@ -19,13 +19,20 @@ public class AppController extends Application {
 
   private Gson gson;
   private HttpLoggingInterceptor logging;
+  private WorkManagerRepo workManagerRepo;
+  private static AppController instance;
 
   @Override public void onCreate() {
     super.onCreate();
+    instance = this;
     gson = new GsonBuilder().create();
     logging = new HttpLoggingInterceptor();
     logging.setLevel(
         BuildConfig.DEBUG ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE);
+  }
+
+  public static AppController getInstance() {
+    return instance;
   }
 
   public static WorkManager getWorkManager() {
@@ -44,5 +51,13 @@ public class AppController extends Application {
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build();
     return new WorkManagerRepo(retrofit.create(WorkManagerApi.class));
+  }
+
+  public WorkManagerRepo getWorkManagerRepo() {
+    if (workManagerRepo == null) {
+      workManagerRepo = createWorkManagerRepo();
+    }
+
+    return workManagerRepo;
   }
 }
